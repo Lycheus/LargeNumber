@@ -18,14 +18,17 @@ TODO:
 #define __LargeNumber_h_included__
 
 #include <vector>
+#include <string>
+
+using std::string;
 
 class LargeNumber
 {
  public:
   LargeNumber();
-  LargeNumber(const char*);
+  LargeNumber(const string);
   LargeNumber& operator=(const LargeNumber& c);
-  LargeNumber& operator=(const char* c);
+  LargeNumber& operator=(const string);
 
   LargeNumber add();
   LargeNumber mul();
