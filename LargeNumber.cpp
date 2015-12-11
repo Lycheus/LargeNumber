@@ -15,7 +15,6 @@ TODO:
 *****************************/
 #include "LargeNumber.h"
 #include <iostream>
-#include <cstdlib>
 
 using std::cout;
 using std::endl;
@@ -62,24 +61,69 @@ LargeNumber& LargeNumber::operator= (const LargeNumber& c)
   value = c.value;
   return *this;
 }
-/*
+
 // X + Y
 LargeNumber operator+ (const LargeNumber& x, const LargeNumber& y)
 {
+  int temp;
+  int carry = 0;
+  LargeNumber* output = new LargeNumber();;
+
   // Fetch iterator for X and Y
   std::vector<int>::const_iterator itx=x.value.begin();
-  std::vector<int>::const_iterator itb=y.value.begin();
+  std::vector<int>::const_iterator ity=y.value.begin();
 
   //Deciding the leading length
-  int length 
+  int length = (x.length>y.length)? x.length : y.length;
+  if ( (x.length == y.length) && ((x.value.back() + y.value.back()) >= 10))
+    length++;
+  output->length = length;
 
   //Do addition digit by digit
-  
+  for (int i = 0; i < length; i++)
+    {
+      // x,y length constrain to prevent adding unknown iterator value
+      if (itx == x.value.end())
+	temp = 0 + *ity + carry;
+      else if (ity == y.value.end())
+	temp = *itx + 0 + carry;
+      else if (itx == x.value.end() && ity == y.value.end() && carry == 1)
+	{
+	  output->value.push_back(1);
+	  output->length++;
+	  break;
+	}
+      else
+	temp = *itx + *ity + carry;
+      
+      // calculating digit addition and carry
+      if (temp >= 10)
+	{
+	  output->value.push_back(temp - 10);
+	  carry = 1;
+	}
+      else
+	{
+	  output->value.push_back(temp);
+	  carry = 0;
+	}
 
-  return LargeNumber("1024");
-  
+      // stop iterator from moving after reaching the end of vector
+      if (itx != x.value.end())
+	itx++;
+      if (ity != y.value.end())
+	ity++;
+    }
+
+  //remove the redundant 0 in the beginning of the vector
+  for (int i=0; i<length; i++)
+    output->value[i] = output->value[i+1];
+  output->value.resize(length);
+  length--;
+
+  return *output;
 }
-*/
+
 /*
 LargeNumber LargeNumber::operator++ (LargeNumber)
 {
